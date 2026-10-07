@@ -1,0 +1,63 @@
+Task 1.1 Q1 ⬇️:
+1. We will use load_data() from winequality.py to read the wine data, and get the column names separately with get_column_names(). This gives one row per wine and one column per property.
+2. We will create a function correlation_matrix() that will calculate the Pearson correlation for every pair of columns, including quality. It will create a square grid of numbers from -1 to +1.
+3. We will create a function cluster_order() that groups properties that behave alike, using the correlations. It gives a new order for the rows and columns, and the tree shapes.
+4. We will create a function plot_heatmap(). It will draw the reordered grid as coloured squares with the number in each square, a colour scale, and a dendrogram on two sides.
+5. At the end, we will save the picture to task1_heatmap.png using plot_heatmap() function.
+
+
+
+Task 1.1 Q2 ⬇️:
+Starting Prompt:
+I'm currently working on Task 1.1 in task1_exploration.py. So, needs your help to complete that. It needs a
+function correlation_matrix() to calculate Pearson correlations between all wine
+properties and quality, and the function plot_heatmap() to draw them as a matplotlib
+heatmap with dendrograms on the sides, saved as task1_heatmap.png.
+Please use the function load_data() from winequality.py to read the data, and get the column
+names separately. Read task1_exploration.py and winequality.py first.
+Please don't edit anything yet. Explain in simple words what you plan to do, and list any problems in the existing scaffold code.
+
+Follow-up Prompt 1:
+Good plan, but please change three things:
+1. Please make a small separate function inside task1_exploration.py for reading the column names. I don't want to read the column names directly inside __main__.
+2. Before using linkage, please convert the 1 - correlation matrix into condensed form using scipy's squareform.
+3. For the heatmap, please use a diverging colour map and keep the range fixed from -1 to +1. I think this will make positive and negative correlations easier to understand.
+Please show me the updated plan first. Don't change the code yet.
+
+Follow-up Prompt 3:
+Please write plot_heatmap() again with these fixes:
+1. The left dendrogram is upside down compared with the heatmap rows. Please flip it so its leaves match the rows.
+2. The colour bar shrinks the heatmap, so the top dendrogram no longer lines up with the columns. Give the colour bar its own grid column, and use aspect="auto" in imshow so the heatmap lines up exactly with both dendrograms.
+3. The row labels are overlapping with the left dendrogram. Please move the row labels to the right side of the heatmap.
+4. Please move the clustering steps (distance, squareform, linkage, leaf order) into a small separate function called cluster_order() that plot_heatmap() calls.
+
+Follow-up Prompt 4:
+There is one more problem. The row labels on the right are now hidden behind the colour bar. Move the colour bar into the empty top-left corner of the figure as a small horizontal bar, and remove the extra grid column, so the labels have room.
+
+Manual edit:
+I also manually added this line "added ax_cbar.set_box_aspect(0.15)"
+I added it because the colour bar was looking too large and square. This makes it look like a thin horizontal strip instead.
+
+Prompt 5:
+I just noticed a small change is needed. Please update plot_heatmap(). Add a title at the very top of the figure (above the top dendrogram), label the colour bar "Pearson correlation", add thin white lines between the squares, angle the bottom labels at 45 degrees, and use white text for numbers above 0.6 or below -0.6. Show tiny negatives like -0.00 as 0.00. Move the code that writes the numbers into a small helper function. In cluster_order(), add a comment stating the assumption that using 1 - r puts strongly negative correlations far apart.
+
+
+
+Task 1.1 Q3 ⬇️:
+Quality correlates most with alcohol (r=0.48), volatile acidity (r=-0.40) and sulphates (r=0.25). Stronger, less vinegary wines tend to score higher.
+
+The most correlated pairs are fixed acidity with citric acid and with density (both 0.67). The most anti-correlated are volatile acidity with citric acid (-0.55) and alcohol with density (-0.50). Residual sugar is almost uncorrelated with volatile acidity (0.00), sulphates (-0.01) and quality (0.01).
+
+The dendrogram groups fixed acidity, citric acid and density together, so they overlap, but I would not call them redundant. Correlations of 0.5-0.7 are far from identical, and a weak feature may still help a model in combination with others.
+
+Method: get_column_names() reads the labels and correlation_matrix() applies numpy.corrcoef to the load_data() array. cluster_order() turns 1 - r into distances and uses squareform and average linkage to put similar properties together. plot_heatmap() draws the reordered grid with dendrograms on two sides, a fixed -1 to +1 colour scale and each value printed. I tested each function and checked values against a separate calculation.
+
+Further discussion: even the strongest link with quality is moderate, so no single property predicts quality. Pearson only measures straight-line relationships, and quality has few whole-number values (mostly 5 and 6), which keeps all correlations modest. A model combining all properties, as used in Tasks 2 and 3, is therefore a sensible next step.
+
+
+
+JUST FOR VIVA:
+How it now lines up with the Q3 box 👇:
+Paragraphs 1 to 3 answer the three questions from the Task 1 page, in their order: top three, pairs, redundancy.
+Paragraph 4 is the methodology.
+Paragraph 5 is the further discussion. I moved the limitations there, and added one sentence connecting it to Tasks 2 and 3. Since no single property explains quality, combining them in a model is the logical next step, which shows the marker you see how the project fits together.

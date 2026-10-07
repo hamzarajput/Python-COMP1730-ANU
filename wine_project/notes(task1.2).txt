@@ -1,0 +1,76 @@
+Concept 🧠:
+Each wine has 9 chemistry numbers. You can draw 2 numbers on a flat graph (one across, one up), but you can't draw 9. 
+tSNE solves this: it makes a flat map where each wine is one dot, and wines with similar chemistry are placed close together.
+Think of a wedding seating plan: guests with similar interests are seated near each other, so friend groups end up at the same tables. 
+tSNE does that with wines.
+Then you colour each dot by its quality score. 
+If good wines bunch together on the map, that tells you good wines have similar chemistry.
+
+
+Three things you need to know:
+1️⃣ Leave quality out of the map. tSNE should place wines using only the 9 chemistry numbers. 
+Quality is used only for the colour. If quality were included, good wines would cluster just because they share a score, 
+and the picture would tell us nothing new.
+2️⃣ Scale the numbers first ("standardise"). The columns use very different units. 
+Total sulfur dioxide goes up to about 289, while density barely moves around 0.99. 
+Without scaling, tSNE would mostly look at the big numbers and ignore the small ones. 
+It's like comparing people by height in centimetres and weight in tonnes: height would dominate just because its numbers are bigger. 
+Standardising puts every column on the same scale.
+3️⃣ Perplexity is a tSNE setting that roughly means how many neighbours each wine pays attention to when placing itself. 
+The default is 30, and the task's tip suggests 60 may separate this data better.
+
+
+Task 1.2 Q1 ⬇️:
+All steps run inside plot_tsne():
+1. We will load the data with load_data().
+2. We will split it into the 9 chemistry columns and the quality column (only for colours).
+3. We will standardise the 9 columns so no column dominates.
+4. We will run tSNE with perplexity 60, turning each wine's 9 numbers into 2 (a map position).
+5. We will group wines as low (3-4), medium (5-6) and high (7-8) and draw a scatter plot: medium in grey underneath, low and high on top in different colours and shapes, plus a legend, labels and title.
+6. We will save the picture as task1_tsne.png.
+
+
+Task 1.2 Q2 ⬇️:
+Prompt 1:
+Next I need help for Task 1.2 in task1_exploration.py. Please implement plot_tsne() and keep its existing parameters. 
+It should load the data with load_data(), split it into the 9 chemistry columns and the quality column (quality only for the colours, 
+not for the tSNE), standardise the 9 columns, run sklearn's TSNE with the perplexity parameter and a fixed random_state, 
+then draw a scatter plot with one dot per wine coloured by quality, with a colour legend, axis labels and a title, and save it to output_file. 
+Please don't change the heatmap code and don't edit anything yet, tell me your plan first.
+
+Prompt 2:
+This is a good plan but I need two changes. Following are that: create the figure with fig, ax = plt.subplots() and use ax.scatter, fig.colorbar and ax.set_... instead of plt functions, to match plot_heatmap(). Also, the data has 1,359 wines, not about 1,600, so check for that number. Then please show me the updated plan.
+
+Prompt 3:
+I've just noticed. The picture is very hard to read. The smooth colour scale makes 5 and 6 look almost the same, and the rare low and high quality wines are hidden among the many 5s and 6s. Please change plot_tsne() to colour the wines in three groups: low (3-4), medium (5-6) and high (7-8), with the group boundaries stored as named constants and a comment explaining the choice. Draw medium first in light grey, then low and high on top in two strong colours with different marker shapes. Use smaller dots with some transparency, add a legend showing each group's name and number of wines, and put the perplexity value in the title.
+
+Prompt 4:
+Now Without changing any code, run plot_tsne() once with perplexity=30 and output_file="task1_tsne_p30.png", so that I could compare it with the perplexity 60 version.
+
+
+
+Task 1.2 Q3 ⬇️:
+The tSNE map places wines with similar chemistry close together. Colouring by quality group shows a clear pattern: high-quality wines (7-8) gather mostly on the right, low-quality wines (3-4) mostly on the left edge, and the common medium wines (5-6) spread across the map. The groups still overlap, so chemistry is linked to quality but does not decide it alone.
+My first plot used a smooth colour scale, which made 5 and 6 look alike and hid the rare wines. Grouping scores into low, medium and high, drawing medium in grey underneath, and giving low and high different colours and marker shapes made the pattern readable. The legend shows the group sizes (63 low, 1112 medium, 184 high), which explains why rare wines were hidden.
+Perplexity 30 split the high-quality wines into several small clumps, while 60 showed the overall low/high split more clearly, so I kept 60.
+Method: plot_tsne() loads the data with load_data(), keeps quality out of the tSNE input, standardises the 9 properties with StandardScaler so no unit dominates, runs sklearn's TSNE with a fixed random_state for a repeatable map, and saves the scatter plot.
+Further discussion: tSNE axes have no physical meaning and gaps between distant clusters are not reliable, so the map shows neighbourhoods, not exact differences. The overlap suggests quality depends on several properties together, which Tasks 2 and 3 model.
+
+
+JUST FOR VIVA:
+Perplexity comparison:
+
+Perplexity 30:
+- The high-quality wines (blue ▲) split into several small clumps across the top: top-left, top-middle and top-right.
+- The low-quality wines (red ▼) gather on the left edge, but many are scattered through the middle and bottom.
+- The whole map is more spread out (axes run to ±40) and broken into more small groups.
+
+Perplexity 60:
+- The high-quality wines form one main region on the right, and the low-quality wines sit mostly on the left.
+- The split between low and high is easier to see at a glance.
+
+What it means: perplexity is roughly how many neighbours each wine "pays attention to". 
+At 30, tSNE focuses on very close neighbours, so it shows many small local groups. 
+At 60, each wine considers more neighbours, so the bigger overall pattern (good on one side, poor on the other) shows more clearly. 
+Both pictures agree on the main finding: good and poor wines tend to sit in different areas, 
+but they still overlap with the grey medium wines. So chemistry is related to quality, but doesn't fully decide it.
