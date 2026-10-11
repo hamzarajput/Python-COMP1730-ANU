@@ -1,0 +1,15 @@
+Task 2 Q1 ⬇️:
+1. I build the model once with build_model(), then find the smallest and biggest value of each property in the training data, so my made-up wines keep normal-looking values.
+2. To score a wine, I put its 9 values into a dictionary and pass it to predict().
+3. For the search, I start with the training wines with the best (or worst) predicted scores. Then I change one property at a time between its min and max, and keep the change if the score improves, until nothing improves. I score many wines in one go so it runs fast.
+4. perfect() makes the score as high as possible and awful() as low as possible, both with this search. Both return (wine, score).
+5. To check, I add the two wines to the data, run tSNE again and mark them, to see where they end up among the real wines.
+
+
+Task 2 Q2 ⬇️:
+Prompt 1:
+Now we start Task 2 in task2_theoreticalwine.py. I need perfect() and awful(), each giving back a wine (dict) and its score, and building the model if none is passed in. Every property must stay between its smallest and biggest value in the training file. Search: start with the training wines with the best predicted scores (worst for awful()), change one property at a time across its range, keep changes that improve the score, and stop when none help. Score many wines at once for speed, but use winequality.predict() for final scores. Also add plot_on_tsne(): rerun the Task 1 tSNE with both wines added, mark them, save task2_tsne.png. Don't change winequality's functions. Show me the plan first, no edits yet.
+
+Prompt 2:
+Need three changes: 1. Start from the 10 best (or worst) training wines and keep the best result. 2. Don't import task1_exploration; Ed's Task 2 workspace only has this file and winequality.py. 3. plot_on_tsne() should take the two wines as input instead of running the searches again.
+Task 2 Q3 ⬇️:
