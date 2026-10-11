@@ -12,4 +12,11 @@ Now we start Task 2 in task2_theoreticalwine.py. I need perfect() and awful(), e
 
 Prompt 2:
 Need three changes: 1. Start from the 10 best (or worst) training wines and keep the best result. 2. Don't import task1_exploration; Ed's Task 2 workspace only has this file and winequality.py. 3. plot_on_tsne() should take the two wines as input instead of running the searches again.
+
+
 Task 2 Q3 ⬇️:
+The best score I reached is 7.73 and the worst 3.51, on a 3-8 scale. The model cannot reach 8 or 3 because a random forest averages 300 trees, each trained on real wines, so its prediction can never go beyond what the training wines support.
+On the tSNE map, the perfect wine sits at the edge of the high-quality (blue) region and the awful wine at the edge of the low-quality (red) region: both are extreme versions of real good and bad wines.
+The perfect wine has high alcohol (13.1), low volatile acidity (0.35) and high sulphates (0.86); the awful wine has high volatile acidity (1.46), low alcohol (8.4) and low sulphates (0.55). This matches the Task 1 heatmap, where these were the strongest links with quality.
+Method: property_ranges() takes each property's min and max from the training file. From each of the 10 best (or worst) predicted training wines, a coordinate search tries 50 values across one property's range, keeps the best change, and repeats until nothing improves. Candidates are scored in batches for speed; final scores use winequality.predict().
+Further discussion: the result is a local best, not guaranteed global. Each value stays within real ranges, but the combination may not be chemically realistic, and the model cannot extrapolate. "Perfect" means perfect for this model, not for a taster.
